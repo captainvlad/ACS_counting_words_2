@@ -1,0 +1,7 @@
+/opt/clion-2019.3/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/vlad/Desktop/2_year/ACS/lab_4/pro_1
+-- Found Boost: /usr/local/lib/cmake/Boost-1.72.0/BoostConfig.cmake (found version "1.72.0") found components:  filesystem locale system 
+-- Found LibArchive: /usr/lib/x86_64-linux-gnu/libarchive.so (found version "3.4.0") 
+-- Found Threads: TRUE  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/vlad/Desktop/2_year/ACS/lab_4/pro_1/cmake-build-debug

@@ -1,0 +1,3 @@
+/home/vlad/Desktop/2_year/ACS/lab_4/pro_1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/vlad/Desktop/2_year/ACS/lab_4/pro_1/cmake-build-debug/CMakeFiles/counting_words1.dir
+/home/vlad/Desktop/2_year/ACS/lab_4/pro_1/cmake-build-debug/CMakeFiles/edit_cache.dir
