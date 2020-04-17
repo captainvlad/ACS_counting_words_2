@@ -1,1 +1,0 @@
-/usr/bin/c++   -fsanitize=thread -fPIE -pie -g -g   CMakeFiles/counting_words1.dir/main.cpp.o  -o counting_words1 /usr/lib/x86_64-linux-gnu/libarchive.so -lpthread -lboost_locale 
