@@ -86,43 +86,6 @@ public:
 
 // -----------------------------------------------------------------------------------------------------------------
 
-// Archive manipulations
-///------------------------------------------------------------------------------------------------------------------///
-
-auto read_as_raw( const char* filename ){
-    std::ifstream raw_file(filename, std::ios::binary);
-    std::ostringstream buffer_ss;
-    buffer_ss << raw_file.rdbuf();
-    std::string buffer{buffer_ss.str()};
-    return buffer;
-}
-
-auto read_archive_from_memory( std::string buffer ){
-    struct archive *a;
-    struct archive_entry *entry;
-
-    a = archive_read_new();
-    archive_read_support_filter_all(a);
-    std::string content, total;
-
-    archive_read_support_format_all(a);
-    archive_read_open_memory(a, buffer.c_str(), 10240);
-
-    while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
-
-        auto size = archive_entry_size(entry);
-        content = std::string(size, 0);
-
-        archive_read_data(a, &content[0], content.size());
-        total += content + "\n";
-        archive_read_data_skip(a);
-    }
-    archive_read_free(a);
-    return total;
-}
-
-///------------------------------------------------------------------------------------------------------------------///
-
 std::string define_ext( std::string filename ){
     char extensions[][8] = {"txt", "zip", "tar", "sbx", "iso"};
 
@@ -173,7 +136,46 @@ auto get_file_by_index( std::string directory, int index ){
     }
     result = "";
     return result;
-};
+}
+
+// Archive manipulations
+///------------------------------------------------------------------------------------------------------------------///
+
+auto read_as_raw( const char* filename ){
+    std::ifstream raw_file(filename, std::ios::binary);
+    std::ostringstream buffer_ss;
+    buffer_ss << raw_file.rdbuf();
+    std::string buffer{buffer_ss.str()};
+    return buffer;
+}
+
+auto read_archive_from_memory( std::string buffer ){
+    struct archive *a;
+    struct archive_entry *entry;
+
+    a = archive_read_new();
+    archive_read_support_filter_all(a);
+    std::string content, total;
+
+    archive_read_support_format_all(a);
+    archive_read_open_memory(a, buffer.c_str(), 10240);
+
+    while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
+
+        if ( check_file( archive_entry_pathname(entry) ) && archive_entry_size(entry) < 10000000 ){
+            auto size = archive_entry_size(entry);
+            content = std::string(size, 0);
+
+            archive_read_data(a, &content[0], content.size());
+            total += content + "\n";
+        }
+        archive_read_data_skip(a);
+    }
+    archive_read_free(a);
+    return total;
+}
+
+///------------------------------------------------------------------------------------------------------------------///
 
 ///------------------------------------------------------------------------------------------------------------------///
 auto archive_size(std::string archivename){
@@ -258,14 +260,14 @@ auto archive_file_content_by_index( std::string archivename, int index ){
     return content;
 }
 
-void fill_queue( std::string directory, safeQueue<std::string, std::string> &sq ){
+void fill_queue( std::string directory, safeQueue<std::string> &sq ){
 
     using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
     for (const auto& dirEntry : recursive_directory_iterator( directory )){
 
         if ( check_file( dirEntry.path().string() ) ){
-            sq.pushBack( { read_as_raw(dirEntry.path().string().c_str()), define_ext( dirEntry.path().string() ) } ) );
+//            sq.pushBack( { read_as_raw(dirEntry.path().string().c_str()), define_ext( dirEntry.path().string() ) } ) );
             std::cout << define_ext( dirEntry.path().string() ) << "\n";
             }
         }
@@ -308,7 +310,6 @@ int main(){
 //    // Compilation Command: g++ -std=c++17 -O3 main_3.cpp -o main -larchive ;
 
 //    consecutive("../guttenberg_2020_03_06");
-    safeQueue<std::string, std::string> sq;
-    fill_queue("../guttenberg_2020_03_06", sq);
+//    fill_queue("../guttenberg_2020_03_06", sq);
     return 0;
 }
